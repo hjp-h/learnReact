@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../../../img/auto.svg">
+    <title>不使用函数的柯里化</title>
+</head>
+<body>
+    <div id="test">
+    </div>
+    <!--引入react核心库-->
+    <script type="text/javascript" src="../../../js/react.development.js"></script>
+    <!--引入react-dom 用于支持react操作dom-->
+    <script type="text/javascript" src="../../../js/react-dom.development.js"></script>
+     <!--引入babel 用于将jsx转换为js-->
+    <script type="text/javascript" src="../../../js/babel.min.js"></script>
+    <script type="text/babel">
+        class Login extends React.Component{
+            state = {
+                username:'',
+                password:''
+            }
+            handleLogin = (event) => {
+                //阻止默认行为 防止页面跳转
+                event.preventDefault(); 
+                const {username,password} = this.state;
+                if(username==='hjp' && password==='666'){
+                    alert('登录成功！');
+                }else{
+                    alert('登录失败！');
+                }
+            }
+            setFormData = (dataType,dataValue) => {
+                this.setState({[dataType]:dataValue});    
+            }
+            render(){
+                return (
+                    <form action="http://www.baidu.com" onSubmit={this.handleLogin}>
+                        <input onChange={event => this.setFormData('username',event.target.value)} type="text" name="username" placeholder="请输入用户名"/><br/>
+                        <input onChange={event => this.setFormData('password',event.target.value)} type="text" name="password" placeholder="请输入密码"/><br/>
+                        <input type="submit" value="登录"/>
+                    </form>
+
+                )
+            }
+        }
+        ReactDOM.render(<Login/>,document.getElementById("test"));
+    </script>
+</body>
+</html>

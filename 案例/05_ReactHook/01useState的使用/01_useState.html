@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../../img/auto.svg">
+    <title>函数式组件</title>
+</head>
+<body>
+    <div id="test">
+    </div>
+    <!--引入react核心库-->
+    <script type="text/javascript" src="../../../js/react.development.js"></script>
+    <!--引入react-dom 用于支持react操作dom-->
+    <script type="text/javascript" src="../../../js/react-dom.development.js"></script>
+    <!--引入babel 用于将jsx转换为js-->
+    <script type="text/javascript" src="../../../js/babel.min.js"></script>
+    <script type="text/babel">
+    // hook就是一个钩子 钩如state和一些生命周期
+    // 要在函数组件的最顶层使用hook 不建议在别的函数内和循环、判断调用hook 
+      // 1.创建函数式组件
+      function Demo() {
+
+          console.log("Demo Render")
+          // 使用useStateHook
+          const inputRef = React.useRef();
+          /*
+          useState
+          参数：
+            函数默认的参数不传就是undefined
+          返回值：
+            一个数组 包含了一个状态值 和 一个改变状态值的函数
+            第一次状态值为默认的值 后面就是改变后的值
+                
+          */  
+          const [count,setCount] = React.useState(0);
+
+          // 复杂数据类型
+          const [students,setStudents] = React.useState([
+              {id:110,name:'kobe',age:20},
+              {id:111,name:'james',age:22}
+            ])
+          function addCount(num) {
+              setCount(count+parseInt(num),() => {
+                console.log("count",count)
+              });
+              
+            //   另外一种写法
+            //   setCount(preCount => 
+            //       preCount + parseInt(num)
+            //   )
+
+            // 两种写法的区别
+            // 多次 下面的语句只会执行一次
+            // setCount(count+parseInt(num));
+            // setCount(count+parseInt(num));
+
+            // 多次 下面的语句会执行多次
+            // setCount(preCount => preCount + parseInt(num))
+            // setCount(preCount => preCount + parseInt(num))
+            // setCount(preCount => preCount + parseInt(num))
+
+          }
+          function subCount(num) {
+              setCount(count-parseInt(num));
+          }
+          function addAgeByIndex(index) {
+              // 复杂数据类型一定要重新复制一遍 react才会帮你重新渲染
+              // react会进行一个浅比较 只有改变了state才会重新渲染
+              let newStudents = [...students];
+              newStudents[index].age += 1;
+              setStudents(newStudents);
+          }
+          return (
+              <div>
+                <h2>当前count值为{count}</h2>
+                <input type="number" ref={inputRef}/>&nbsp;
+                <button onClick={() => addCount(inputRef.current.value)}>求和</button>
+                <button onClick={() => subCount(inputRef.current.value)}>求减</button>
+                <p>我的学生们：</p>
+                <ul>
+                    {
+                        students.map((item,index) => 
+                            <li key={item.id}>{item.name}&nbsp;{item.age}
+                                <button onClick={() => addAgeByIndex(index)}>age+1</button>
+                            </li>
+                        )
+                    }
+                </ul>
+              </div>
+          )
+      }
+       ReactDOM.render(<Demo/>,document.getElementById("test"));
+    </script>
+</body>
+</html>

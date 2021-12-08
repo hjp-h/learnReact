@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>回调ref调用次数的问题</title>
+</head>
+<body>
+    <div id="test">
+    </div>
+
+    <!--引入react核心库-->
+    <script type="text/javascript" src="../../../js/react.development.js"></script>
+    <!--引入react-dom 用于支持react操作dom-->
+    <script type="text/javascript" src="../../../js/react-dom.development.js"></script>
+     <!--引入babel 用于将jsx转换为js-->
+    <script type="text/javascript" src="../../../js/babel.min.js"></script>
+    
+    <script type="text/babel">
+       //创建类式组件
+        class Demo extends React.Component{
+            /*
+            内联回调ref调用次数的问题：
+            （1）当状态state更新时,页面会重新渲染，第一次调用结点值是null,第二次才是有效的值。
+            */
+            state = {isHot:true}
+            render(){
+                return (
+                    <div>     
+                        <h2>今天天气很{this.state.isHot?'炎热':'凉爽'}</h2>
+                        {/*官方推荐*/}
+                        <input ref={this.input1Ref} type="text" placeholder="请输入文本"/> &nbsp;
+                        {/*内联回调*/}
+                        {/*<input ref={c => {this.input1 = c;console.log('@',c)}} type="text" placeholder="请输入文本"/> &nbsp;*/}
+                        <button onClick={this.showMsg}>点击显示左边的内容</button>&nbsp;<br/>
+                        <input ref={c => this.input2 = c} onBlur={this.showMsg2} type="text" placeholder="请输入文本"/>&nbsp;
+                        <button onClick={this.changeWether}>点击切换天气</button>
+                    </div>
+                )
+            }
+            showMsg = () => {
+                const input1 = this.input1;
+                alert(input1.value);
+            }
+            showMsg2 = () => {
+                const input2 = this.input2;
+                alert(input2.value);
+            }
+            changeWether = () => {
+                //修改状态
+                this.setState({isHot:!this.state.isHot});
+            }
+            input1Ref = (c) => {
+                this.input1 = c;
+                console.log('@',c)
+            }
+        }
+        //将组件渲染到页面
+        ReactDOM.render(<Demo/>,document.getElementById("test"));
+    </script>
+</body>
+</html>

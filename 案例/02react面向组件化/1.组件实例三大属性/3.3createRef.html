@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>createRef</title>
+</head>
+<body>
+    <div id="test">
+    </div>
+
+    <!--引入react核心库-->
+    <script type="text/javascript" src="../../../js/react.development.js"></script>
+    <!--引入react-dom 用于支持react操作dom-->
+    <script type="text/javascript" src="../../../js/react-dom.development.js"></script>
+     <!--引入babel 用于将jsx转换为js-->
+    <script type="text/javascript" src="../../../js/babel.min.js"></script>
+    
+    <script type="text/babel">
+       //创建类式组件
+        class Demo extends React.Component{
+            /*
+            React.createRef()创建出来的容器是‘专人专用的’，也就是说每个标签属性的ref使用的ref都是唯一的
+            别的标签要用，就得重新 React.createRef()
+            */
+           //创建ref容器 放在实例身上 当标签的ref属性被解析之后 就会将节点放入容器中
+            myRef = React.createRef();
+            myRef1 = React.createRef();
+            render(){
+                return (
+                    <div>
+                        <input ref={this.myRef} type="text" placeholder="请输入文本"/> &nbsp;
+                        <button onClick={this.showMsg}>点击显示左边的内容</button>&nbsp;<br/>
+                        <input ref={this.myRef1} onBlur={this.showMsg2} type="text" placeholder="请输入文本"/>&nbsp;
+                       
+                    </div>
+                )
+            }
+            showMsg = () => {
+                this.myRef.current.focus()
+                console.log(this.myRef.current);
+                const value = this.myRef.current.value;
+                // alert(value);
+            }
+            showMsg2 = () => {
+                const value = this.myRef1.current.value;
+                alert(value);
+            }
+        }
+        //将组件渲染到页面
+        ReactDOM.render(<Demo/>,document.getElementById("test"));
+        /*
+        ref总结：
+        （1）字符串形式的ref,效率低
+        （2）内联回调函数，会回调两次（问题不大，比较常用）
+        （3）绑定类的形式回调，回调一次
+        （4）createRef
+        */
+    </script>
+</body>
+</html>

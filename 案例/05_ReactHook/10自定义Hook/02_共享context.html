@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../../../img/auto.svg">
+    <title>函数式组件</title>
+</head>
+<body>
+    <div id="test">
+    </div>
+    <!--引入react核心库-->
+    <script type="text/javascript" src="../../../js/react.development.js"></script>
+    <!--引入react-dom 用于支持react操作dom-->
+    <script type="text/javascript" src="../../../js/react-dom.development.js"></script>
+    <!--引入babel 用于将jsx转换为js-->
+    <script type="text/javascript" src="../../../js/babel.min.js"></script>
+    <script type="text/babel">
+      // 1.创建context对象 使得子孙组件可以共享变量
+      const userContext = React.createContext();
+      const tokenContext = React.createContext();
+      // 大组件
+      function BigDemo() {
+        return (
+          <div>
+            <h2>BigDemo</h2>
+            {/*提供给子孙组件*/}
+            <userContext.Provider value={{name:'hjp',age:18}}>
+              <tokenContext.Provider value='kjhasfbgcksdac'>
+                <Demo/>
+              </tokenContext.Provider>
+            </userContext.Provider>
+          </div>
+        )
+        
+      }
+      // 创建自定义Hook实现context共享
+      function useCustomShareContext() {
+        const user = React.useContext(userContext);
+        const token = React.useContext(tokenContext);
+        return [user,token]
+      }
+      // 
+      function Demo() {
+        // 使用自定义钩子接收
+          const [user,token] = useCustomShareContext();
+          console.log(user,token)
+          return (
+              <div>
+                <h2>useContext</h2>
+                {/*常规接收*/}
+                <userContext.Consumer>
+                  {
+                    value => `${value.name}`
+                  }
+                </userContext.Consumer>
+              </div>
+          )
+      }
+     ReactDOM.render(<BigDemo/>,document.getElementById("test"));
+    </script>
+</body>
+</html>

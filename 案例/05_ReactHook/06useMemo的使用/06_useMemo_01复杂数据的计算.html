@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../../img/auto.svg">
+    <title>函数式组件</title>
+</head>
+<body>
+    <div id="test">
+    </div>
+    <!--引入react核心库-->
+    <script type="text/javascript" src="../../js/react.development.js"></script>
+    <!--引入react-dom 用于支持react操作dom-->
+    <script type="text/javascript" src="../../js/react-dom.development.js"></script>
+    <!--引入babel 用于将jsx转换为js-->
+    <script type="text/javascript" src="../../js/babel.min.js"></script>
+    <script type="text/babel">
+    /*
+    1.useMemo是用来进行性能优化的 防止一些计算好的值 在依赖不变的情况下 仍然会重新计算
+    2.第一个参数是回调函数-返回一个固定值（在依赖不变的情况下），第二个是依赖数组
+    */
+     function calculAdd(count){
+       console.log('累加函数调用')
+       let total = 0;
+       for(let i=1;i<=count;i++){
+         total += i;
+       }
+       return total;
+     }
+      // 1.创建函数式组件
+      function Demo() {
+          console.log("Demo Render");
+          const [count,setCount] = React.useState(10);
+          const [isshow,setIsShow] = React.useState(true);
+          // 这种写法会让累加函数随着组件render而重新调用 
+          //const total = calculAdd(count);
+
+          const total = React.useMemo(() => calculAdd(count),[count])
+          return (
+              <div>
+                <h2>当前count值为{count}，累加：{total}</h2>
+                <button onClick={() => {setCount(count + 1)}}>+1</button>
+                <button onClick={() => {setIsShow(!isshow)}}>show切换</button>
+              </div>
+          )
+      }
+       ReactDOM.render(<Demo/>,document.getElementById("test"));
+    </script>
+</body>
+</html>

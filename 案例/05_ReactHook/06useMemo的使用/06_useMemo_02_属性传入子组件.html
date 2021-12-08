@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../../img/auto.svg">
+    <title>函数式组件</title>
+</head>
+<body>
+    <div id="test">
+    </div>
+    <!--引入react核心库-->
+    <script type="text/javascript" src="../../js/react.development.js"></script>
+    <!--引入react-dom 用于支持react操作dom-->
+    <script type="text/javascript" src="../../js/react-dom.development.js"></script>
+    <!--引入babel 用于将jsx转换为js-->
+    <script type="text/javascript" src="../../js/babel.min.js"></script>
+    <script type="text/babel">
+    /*
+    1.useMemo是用来进行性能优化的 防止一些计算好的值 在依赖不变的情况下 仍然会重新计算
+    2.第一个参数是回调函数-返回一个固定值（在依赖不变的情况下），第二个是依赖数组
+    */
+   /*
+   useMemo和useCallback的区别
+   1.useMemo是对回调函数的返回值进行优化
+   2.useCallback是对回调函数进行优化
+
+   useCallback可以被转换为useMemo，只需要把useMemo回调函数的返回值变成函数即可
+   */
+     const JPInfo = React.memo((props) => {
+       console.log("我是JPInfo")
+       return <h3>我是{props.info.name},今年{props.info.age}</h3>;
+     })
+      // 1.创建函数式组件
+      function Demo() {
+        // 这样写会让info随着isShow的改变多次被重新定义，使得子组件多次渲染
+          // const info = {name:'hjp',age:12}
+
+          // 只有依赖数组改变才重新定义info
+          const info = React.useMemo(() => ({name:'hjp',age:12}),[])
+          const [isShow,setIsShow] = React.useState(true);
+          return (
+              <div>
+                <JPInfo info={info}/>
+                <button onClick={() => {setIsShow(!isShow)}}>show切换</button>
+              </div>
+          )
+      }
+       ReactDOM.render(<Demo/>,document.getElementById("test"));
+    </script>
+</body>
+</html>

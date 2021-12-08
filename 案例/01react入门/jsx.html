@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSX</title>
+    <style>
+        .title{
+            background-color:orange;
+            width:200px;
+        }
+    </style>
+</head>
+<body>
+    <div id="test"></div>
+     <!--引入react核心库-->
+     <script type="text/javascript" src="../../js/react.development.js"></script>
+     <!--引入react-dom 用于支持react操作dom-->
+     <script type="text/javascript" src="../../js/react-dom.development.js"></script>
+     <!--引入babel 用于将jsx转换为js-->
+     <script type="text/javascript" src="../../js/babel.min.js"></script>
+     <!--此处一定要写babel 因为我们要在这里写jsx 而不是js 通过babel转换-->
+     <script type="text/babel">
+        const id = 'title';
+        const data = 'Hello React';
+        //创建虚拟DOM
+        const vdom = (
+            <div>
+                <h2 id="{id}" className="title">
+                    <span style={{color:'white',fontSize:'25px'}}>{data}</span>
+                </h2>
+                <input type="text" placeholder="你好"/>
+            </div>
+            
+        )
+        //渲染
+        ReactDOM.render(vdom,document.getElementById("test"));
+
+        /*
+        JSX语法规则：
+        1.定义虚拟DOM,不要写引号
+        2.标签中混入js表达式时要用{}  一定是js表达式 并不是所有的js语句
+        3.样式的类名不要用class,要用className,防止和es6的class冲突
+        4.内联样式，要用style={{key:value}}
+        5.只能有一个根标签
+        6.标签必须闭合 
+        7.标签首字母
+            （1）若小写字母开头，则转为html同名元素，若html无该标签，就报错
+            （2）若是大写字母，会被当成组件
+        */
+
+        /*
+        一定注意区分：【js语句（代码）】与【js表达式】
+        1.表达式：一个表达式会产生一个值，可以放在任何一个需要值的地方
+        下面这些都是表达式：
+         a、a+b、demo(1)、arr.map()、function test(){}
+        2.语句，没有返回值 
+         */
+     </script>
+</body>
+</html>

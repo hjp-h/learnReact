@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../../img/auto.svg">
+    <title>renderProps</title>
+    <style>
+        .div1{
+            width:300px;
+            padding:8px;
+            background-color:orange;
+        }
+        .div2{
+            width: 90%;
+            padding:8px;
+            background-color:skyblue;
+        }
+        .div3{
+            width:90%;
+            padding:8px;
+            background-color:purple;
+        }
+    </style>
+</head>
+<body>
+    <div id="test">
+    </div>
+    <!--引入react核心库-->
+    <script type="text/javascript" src="../../js/react.development.js"></script>
+    <!--引入react-dom 用于支持react操作dom-->
+    <script type="text/javascript" src="../../js/react-dom.development.js"></script>
+    <!--引入babel 用于将jsx转换为js-->
+    <script type="text/javascript" src="../../js/babel.min.js"></script>
+    <script type="text/babel">
+        class A extends React.Component{
+            render(){
+                return (
+                    <div className="div1">
+                        <h2>我是A组件</h2>   
+                        <B render={(name,age) => <C name={name} age={age}/>}>BBBB</B>
+                    </div>
+                )
+            }
+        }
+        class B extends React.Component{
+            state = {name:'lqh',age:17}
+            render(){
+                const {name,age} = this.state;
+                return(
+                    <div className="div2">
+                        <h2>我是B组件</h2>
+                        {this.props.children}
+                        {this.props.render(name,age)}
+                    </div>
+                )  
+            }
+        }
+        class C extends React.Component{
+            render(){
+                const {name,age} = this.props;
+                return (
+                    <div className="div3">
+                        <h2>我是C组件</h2>
+                        <p>我从B组件接收的用户名{name},年龄{age}</p>
+                    </div>
+                )   
+            }
+        }
+        ReactDOM.render(<A/>,document.getElementById("test"));
+    </script>
+</body>
+</html>

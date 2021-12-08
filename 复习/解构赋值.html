@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>解构赋值</title>
+</head>
+<body>
+    <script>
+        //1.常规的解构赋值
+        // let obj = {a:1,b:2};
+        // const {a} = obj;
+        // console.log(a);
+
+        //2.连续的解构赋值
+        // let obj = {a:{b:1}}
+        // //输出a是undefined
+        // const {a:{b}} = obj;
+        // console.log(b);
+
+        //3.连续的解构赋值更改名字
+        // let obj = {a:{b:1}}
+        // //输出a是undefined
+        // const {a:{b:data}} = obj;
+        // console.log(data);
+        
+
+        let obj = {a:1,b:2}
+        const {children,...others} = obj;
+        console.log(children,others.a);
+    </script>  
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../../img/auto.svg">
+    <title>函数式组件</title>
+</head>
+<body>
+    <div id="test">
+    </div>
+    <!--引入react核心库-->
+    <script type="text/javascript" src="../../../js/react.development.js"></script>
+    <!--引入react-dom 用于支持react操作dom-->
+    <script type="text/javascript" src="../../../js/react-dom.development.js"></script>
+    <!--引入babel 用于将jsx转换为js-->
+    <script type="text/javascript" src="../../../js/babel.min.js"></script>
+    <script type="text/babel">
+    /**
+     * 1.useEffect就包含了componentDidmount,
+     * componentDidUpdate,componentWillUnmount这三个生命周期的功能
+     * 
+     * 2.useEffect传递两个参数，第一个是一个回调函数，第二个参数（可选）
+     * 是一个数组（为了性能的优化）
+     * 
+     * 3.如果第二个参数没有传递，则是componentDidMount和componentDidUpdate
+     * 这两个生命周期
+     * */
+      // 1.创建函数式组件
+      function Demo() {
+          const inputRef = React.useRef();
+          const [count,setCount] = React.useState(0);
+          const [isLogin,setIsLogin] = React.useState(false);
+          function addCount(num) {
+            setCount(count+parseInt(num));
+          }
+          function subCount(num) {
+              setCount(count-parseInt(num));
+          }
+          
+          // 默认没有传第二个参数(对谁都依赖) 相当于componentDidMount和componentDidUpdate
+          // React.useEffect(() => {
+          //   // componentDidMount
+          //   console.log('你好啊');
+          //   return () => {
+          //     // componentWillUnmount
+          //     console.log('再见')
+          //   }
+          // })
+
+          // 传一个空数组表示对谁都不依赖
+          React.useEffect(() => {
+            // componentDidMount
+            console.log('你好啊');
+            return () => {
+              // componentWillUnmount
+              console.log('再见')
+              function Goodbye() {
+                return (
+                  <p>Bye~</p>
+                )
+              }
+              ReactDOM.render(<Goodbye/>,document.getElementById("test"));
+            }
+          },[count])
+
+          // 传入一个非空的数组，只对该元素有依赖
+          // React.useEffect(() => {
+          //   // componentDidMount
+          //   console.log("登录状态发生改变了~")
+          //   return () => {
+          //     // componentWillUnmount
+          //     console.log('再见')
+          //     function Goodbye() {
+          //       return (
+          //         <p>Bye~</p>
+          //       )
+          //     }
+          //     ReactDOM.render(<Goodbye/>,document.getElementById("test"));
+          //   }
+          // },[isLogin])
+          
+          return (
+              <div>
+                <h2>当前count值为{count}</h2>
+                <input type="number" ref={inputRef}/>&nbsp;
+                <button onClick={() => addCount(inputRef.current.value)}>求和</button>
+                <button onClick={() => subCount(inputRef.current.value)}>求减</button>
+                <p>{isLogin?'欢迎':'请登录'}</p>
+                <button onClick={() => setIsLogin(!isLogin)}>登录|注销</button><br/>
+                <button onClick={() => ReactDOM.unmountComponentAtNode(document.getElementById("test"))}>卸载组件</button>
+              </div>
+          )
+      }
+       ReactDOM.render(<Demo/>,document.getElementById("test"));
+    </script>
+</body>
+</html>

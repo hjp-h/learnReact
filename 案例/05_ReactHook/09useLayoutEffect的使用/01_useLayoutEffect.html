@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../../img/auto.svg">
+    <title>函数式组件</title>
+</head>
+<body>
+    <div id="test">
+    </div>
+    <!--引入react核心库-->
+    <script type="text/javascript" src="../../js/react.development.js"></script>
+    <!--引入react-dom 用于支持react操作dom-->
+    <script type="text/javascript" src="../../js/react-dom.development.js"></script>
+    <!--引入babel 用于将jsx转换为js-->
+    <script type="text/javascript" src="../../js/babel.min.js"></script>
+    <script type="text/babel">
+   // useLayoutEffect就是在状态更新之前对状态进行一些操作
+   // useEffect 就是在更新状态之后对状态进行一些操作
+      // 1.创建函数式组件
+      function Demo() {
+          console.log("Demo Render")
+          const [count,setCount] = React.useState(10);
+          React.useLayoutEffect(() => {
+            // 这里相当于componentDidMounted 和 componentWillUpdate的钩子
+            if(count === 0) {
+              setCount(123)
+            }
+            return () => {
+              // componentWillUnmount
+              console.log('再见')
+              function Goodbye() {
+                return (
+                  <p>Bye~</p>
+                )
+              }
+              ReactDOM.render(<Goodbye/>,document.getElementById("test"));
+            };
+          }, [count])
+          return (
+              <div>
+                <h2>当前count值为{count}</h2>
+                <button onClick={() => setCount(0)}>修改count</button>
+                <button onClick={() => ReactDOM.unmountComponentAtNode(document.getElementById("test"))}>卸载组件</button>
+              </div>
+          )
+      }
+       ReactDOM.render(<Demo/>,document.getElementById("test"));
+    </script>
+</body>
+</html>

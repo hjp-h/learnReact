@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>类中this的指向</title>
+</head>
+<body>
+    <script>
+        class Person{
+            constructor(name,age){
+                this.name = name;
+                this.age = age;
+            }
+            //speak放在Person的原型对象上，供实例使用
+            speak(){
+                //类中自己定义的方法，它局部给你开了严格模式，直接调用的this就是undefined
+                //通过实例调用时，this指向的就是实例
+                console.log(this);
+            }
+        }
+        const p1 = new Person('hjp',21);
+        p1.speak();//p1
+        const temp  = p1.speak;
+        temp();//undefined  局部开启了use strict 直接调用 this就是undefined
+    </script>
+</body>
+</html>

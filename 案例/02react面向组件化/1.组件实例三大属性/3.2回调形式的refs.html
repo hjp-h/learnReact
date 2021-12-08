@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>回调形式的refs</title>
+</head>
+<body>
+    <div id="test">
+    </div>
+
+    <!--引入react核心库-->
+    <script type="text/javascript" src="../../../js/react.development.js"></script>
+    <!--引入react-dom 用于支持react操作dom-->
+    <script type="text/javascript" src="../../../js/react-dom.development.js"></script>
+     <!--引入babel 用于将jsx转换为js-->
+    <script type="text/javascript" src="../../../js/babel.min.js"></script>
+    
+    <script type="text/babel">
+       //创建类式组件
+        class Demo extends React.Component{
+            /*
+            回调函数满足的三个条件：
+            （1）你写的
+            （2）不是你调用的
+            （3）执行了，别人帮你调用的
+            */
+            render(){
+                return (
+                    <div>
+                        <input ref={c => this.input1 = c} type="text" placeholder="请输入文本"/> &nbsp;
+                        <button onClick={this.showMsg}>点击显示左边的内容</button>&nbsp;<br/>
+                        <input ref={c => this.input2 = c} onBlur={this.showMsg2} type="text" placeholder="请输入文本"/>&nbsp;
+                       
+                    </div>
+                )
+            }
+            showMsg = () => {
+                const input1 = this.input1;
+                alert(input1.value);
+            }
+            showMsg2 = () => {
+                const input2 = this.input2;
+                alert(input2.value);
+            }
+        }
+        //将组件渲染到页面
+        ReactDOM.render(<Demo/>,document.getElementById("test"));
+    </script>
+</body>
+</html>

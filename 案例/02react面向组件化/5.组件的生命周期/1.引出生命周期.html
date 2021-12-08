@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../../../img/auto.svg">
+    <title>引出生命周期</title>
+</head>
+<body>
+    <div id="test">
+    </div>
+   <!--引入react核心库-->
+   <script type="text/javascript" src="../../../js/react.development.js"></script>
+   <!--引入react-dom 用于支持react操作dom-->
+   <script type="text/javascript" src="../../../js/react-dom.development.js"></script>
+    <!--引入babel 用于将jsx转换为js-->
+   <script type="text/javascript" src="../../../js/babel.min.js"></script>
+    <script type="text/babel">
+        //创建类式组件
+        //组件声明周期回调函数 声明周期钩子函数
+        class Demo extends React.Component{
+            state = {opacity:1}
+            //组件挂载完成后
+            componentDidMount(){ //只执行一次
+                //开启一个定时器 让opacity每0.2秒减0.1 减到0又变成1
+                this.timer = setInterval(()=>{
+                    let {opacity} = this.state;
+                    opacity -= 0.1;
+                    if(opacity<=0){
+                        opacity = 1;
+                    }
+                    this.setState({opacity});
+                },200);
+            }
+            componentWillUnmount(){
+                //组件卸载前 关闭定时器
+                clearInterval(this.timer);
+            }
+            death = () => {
+                //卸载某个结点的组件
+                ReactDOM.unmountComponentAtNode(document.getElementById("test"));
+            }
+            render(){
+                //不能在这里开启定时器，因为修改状态的时候会重新渲染，会开很多个定时器
+                return (
+                    <div>
+                        <h2 style={{opacity:this.state.opacity}}>学习React真开心啊，我超厉害的</h2>
+                        <button onClick={this.death}>学习啦88</button>
+                    </div>
+                )
+            }
+        }
+       
+        
+        //渲染组件
+        ReactDOM.render(<Demo/>,document.getElementById("test"));
+    </script>
+</body>
+</html>

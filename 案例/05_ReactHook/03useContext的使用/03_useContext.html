@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../../img/auto.svg">
+    <title>函数式组件</title>
+</head>
+<body>
+    <div id="test">
+    </div>
+    <!--引入react核心库-->
+    <script type="text/javascript" src="../../js/react.development.js"></script>
+    <!--引入react-dom 用于支持react操作dom-->
+    <script type="text/javascript" src="../../js/react-dom.development.js"></script>
+    <!--引入babel 用于将jsx转换为js-->
+    <script type="text/javascript" src="../../js/babel.min.js"></script>
+    <script type="text/babel">
+      // 1.创建context对象 使得子孙组件可以共享变量
+      const MyContext = React.createContext();
+      // 2.取出Provider,consumer
+      const {Provider,Consumer} = MyContext;
+      // 大组件
+      function BigDemo() {
+        return (
+          <div>
+            <h2>BigDemo</h2>
+            {/*提供给子孙组件*/}
+            <Provider value={{name:'hjp',age:18}}>
+              <Demo/>
+            </Provider>
+          </div>
+        )
+        
+      }
+      // 1.创建函数式组件
+      function Demo() {
+        // 使用钩子接收
+          const user = React.useContext(MyContext);
+          console.log(user)
+          return (
+              <div>
+                <h2>useContext</h2>
+                {/*常规接收*/}
+                <Consumer>
+                  {
+                    value => `${value.name}`
+                  }
+                </Consumer>
+              </div>
+          )
+      }
+     ReactDOM.render(<BigDemo/>,document.getElementById("test"));
+    </script>
+</body>
+</html>

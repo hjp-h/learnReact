@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../../../img/auto.svg">
+    <title>生命周期(新)</title>
+</head>
+<body>
+    <div id="test">
+    </div>
+   <!--引入react核心库-->
+   <script type="text/javascript" src="../../../js/17.0.1/react.development.js"></script>
+   <!--引入react-dom 用于支持react操作dom-->
+   <script type="text/javascript" src="../../../js/17.0.1/react-dom.development.js"></script>
+    <!--引入babel 用于将jsx转换为js-->
+   <script type="text/javascript" src="../../../js/17.0.1/babel.min.js"></script>
+    <script type="text/babel">
+    /*
+    1. 初始化阶段：由ReactDOM.render()触发 ---- 初次渲染
+        1. constructor()
+        2. getDerivedStateFromProps()
+        3. render()
+        4. componentDidMount()
+    2. 更新阶段：由组件内部this.setState()或父组件重新render触发
+        1. getDerivedStateFromProps()
+        2. shouldComponentUpdate()
+        3. render()
+        4. getSnapshotBeforeUpdate()
+        5. componentDidUpdate()
+    3. 卸载组件:由ReactDOM.unmountComponentAtNode()触发
+        1. componentWillUnmount()
+    */
+       //创建组件
+       class Count extends React.Component{
+           //1.最先执行构造器
+           constructor(props){
+               console.log('constructor');
+               super(props);
+               this.state = {count:0};
+           }
+
+          //2.getDerivedStateFromProps 是给类自己使用的，而不是给类的实例使用的，所以要加个static
+          //当状态的值完全有props决定的时候使用  接收两个参数state props
+          //这个方法横跨了挂载和更新  这个方法不常用 使组件难以维护
+           static getDerivedStateFromProps(props,state){
+               //console.log(props,state);
+               console.log('getDerivedStateFromProps');
+               return null;//如果return props,state的值就由props决定
+           }
+           //3.渲染组件
+           render(){
+               console.log('render');
+               return (
+                   <div>
+                    <h2>当前值{this.state.count}</h2>
+                    <button onClick={this.add}>点我+1</button>
+                    <button onClick={this.death}>卸载组件</button><br/>
+                    <button onClick={this.force}>强制更新</button>
+                   </div>
+               )
+           }
+           //4.组件挂载完毕
+           componentDidMount(){
+               console.log('componentDidMount');
+           }
+          
+           //4.getSnapshotBeforeUpdate获取更新前的快照值
+           getSnapshotBeforeUpdate(){
+               console.log('getSnapshotBeforeUpdate');
+               return 'aaa'
+           }
+           
+           //5.componentDidUpdate 接收三个参数 之前的Props、state,快照值
+           componentDidUpdate(preProps,preState,snapshot){
+               console.log(preProps,preState,snapshot);
+           }
+           //6.组件将卸载
+           componentWillUnmount(){
+               console.log('componentWillUnmount');
+           }
+           add = () => {
+               this.setState({count:this.state.count+1});
+           }
+           death = () => {
+               ReactDOM.unmountComponentAtNode(document.getElementById("test"));
+           }
+           force = () => {
+               this.forceUpdate();
+           }
+       }
+       
+       //父子组件 父组件render引起的生命周期函数
+       class Father extends React.Component{
+           //初始化状态
+           state = {carName:'奔驰'};
+           changeCar = () => {
+               this.setState({carName:'劳斯莱斯*幻影'});
+           }
+           render(){
+              return(
+                  <div>
+                    <h2>我是父组件Father</h2>
+                    <Son carName={this.state.carName}/>
+                    <button onClick={this.changeCar}>换车</button>
+                  </div>
+              ) 
+           }
+       }
+       //子组件 son
+       class Son extends React.Component{
+           //新版本如果要用到旧版本的东西，要添加 UNSAFE_，表示可能出现bug
+           //子组件将要收到新的属性时候的钩子
+           UNSAFE_componentWillReceiveProps(props){
+                console.log('son--componentWillRecieveProps',props);
+           }
+           //组件是否应该更新的钩子
+           shouldComponentUpdate(){
+               console.log('son--shouldComponentUpdate');
+               return true;
+           }
+           UNSAFE_componentWillUpdate(){
+               console.log('son--componentWillUpdate');
+           }
+           UNSAFE_componentWillMount(){
+               console.log('son--componentWillMount');
+           }
+           //子组件重新挂载
+           render(){
+               console.log('son--render');
+               return(
+                   <div>
+                     <h3>我是儿子组件Son</h3>
+                     <p>这是爸爸的车：{this.props.carName}</p>
+                   </div>
+               )
+           }
+           //子组件挂载完毕 只会调用一次
+           componentDidMount(){
+               console.log('son--componentDidMount');
+           }
+           //子组件更新完毕
+           componentDidUpdate(){
+            console.log('son--componentDidUpdate');
+           }
+       }
+       //渲染组件到页面
+       ReactDOM.render(<Count name='张三'/>,document.getElementById("test"));
+    </script>
+</body>
+</html>

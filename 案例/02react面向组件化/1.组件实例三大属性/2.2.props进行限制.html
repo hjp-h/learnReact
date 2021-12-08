@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>组件三大属性之props</title>
+</head>
+<body>
+    <div id="test">
+    </div>
+    <div id="test1">
+    </div>
+    <!--引入react核心库-->
+    <script type="text/javascript" src="../../../js/react.development.js"></script>
+    <!--引入react-dom 用于支持react操作dom-->
+    <script type="text/javascript" src="../../../js/react-dom.development.js"></script>
+     <!--引入babel 用于将jsx转换为js-->
+    <script type="text/javascript" src="../../../js/babel.min.js"></script>
+    <!--对类式组件标签的属性进行限制-->
+    <script type="text/javascript" src="../../../js/prop-types.js"></script>
+    <script type="text/babel">
+        //1.创建一个类式组件
+        class Person extends React.Component{
+            render(){
+                //props的结构
+                const {name,age,sex} = this.props;
+                //props是只读的
+                //this.props.name = 'mark';//报错
+                return (
+                    <ul>
+                        <li>姓名：{name}</li>
+                        <li>年龄：{age+1}</li>
+                        <li>性别：{sex}</li>
+                    </ul>
+                )
+            }
+        }
+        //对Person组件的属性进行限制
+        Person.propTypes = {
+            name:PropTypes.string.isRequired,
+            age:PropTypes.number,
+            sex:PropTypes.string,
+            speak:PropTypes.func
+        }
+        Person.defaultProps = {
+            age:18,
+            sex:'男'
+        }
+        function speak() {
+            console.log('我说话了');
+        }
+        //2.渲染组件
+        ReactDOM.render(<Person name="kobe" speak={speak} age={24} sex="男"/>,document.getElementById("test"));
+        //批量传递
+        const p = {name:'小李',age:18,sex:'男'}
+        ReactDOM.render(<Person {...p}/>,document.getElementById("test1"));
+        //注意：这里不是对象赋值的语法  {}是分隔符 表示要写js代码了 ...是react和babel这两个库的作用下才能让你这么写 
+        //但它只适用于标签内使用
+        //传统的js中，对象赋值是  let b = {...a}
+    </script>
+</body>
+</html>

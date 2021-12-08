@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>es6类</title>
+</head>
+<body>
+    <script>
+        class Person {
+            constructor(name,age) {
+                //this指向的是调用这个函数的实例
+                this.age = age;
+                this.name = name;
+            }
+            hello(){ //这个方法是放在原型对象上的,供实例使用
+                console.log(`我是${this.name},今年${this.age}`);
+            }
+        }
+        class Student extends Person{
+            constructor(name,age,grade) {
+                super(name,age);//子类必须最先调用
+                this.grade = grade;
+            }
+            hello() {//重写父类的方法，放在student的原型中,也就是Person
+                console.log(`我是${this.name},今年${this.age},${this.grade}在读。`);
+            }
+            study() { //这个方法是放在原型对象上的,供实例使用
+                console.log('好好学习，天天向上');
+            }
+        }
+        const p1 = new Person('hjp',21);
+        console.log(p1);
+        p1.hello();
+       // p1.study();
+        const s1 = new Student('lqh',20,"大二");
+        console.log(s1);
+        s1.hello();
+        s1.study();
+
+        class Dog{
+            //在类中我们可以直接赋值写一些固定的东西，就是给这个类实例添加了固定的属性以及属性值
+            feet=4;
+            type='Animal'
+            //给类本身添加
+            static fav="bone"
+        }
+        const d = new Dog();
+        console.log(d);
+        // console.log(Dog.type);undeifined 因为type是给实例用的
+        console.log(Dog.fav);//static 定义的 才是自己的
+        /*
+        总结：
+        1.类中的个构造器不是必须的，要对实例进行初始化的操作才写
+        2.类中的方法是放在原型对象上的，供实例使用
+        3.谁new了这个类this就是谁
+        */
+    </script>
+</body>
+</html>

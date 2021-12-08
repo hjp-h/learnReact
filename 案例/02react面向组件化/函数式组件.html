@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../../img/auto.svg">
+    <title>函数式组件</title>
+</head>
+<body>
+    <div id="test">
+    </div>
+    <div id="test1">
+    </div>
+    <!--引入react核心库-->
+    <script type="text/javascript" src="../../js/react.development.js"></script>
+    <!--引入react-dom 用于支持react操作dom-->
+    <script type="text/javascript" src="../../js/react-dom.development.js"></script>
+    <!--引入babel 用于将jsx转换为js-->
+    <script type="text/javascript" src="../../js/babel.min.js"></script>
+    <script type="text/babel">
+        //1.创建函数式组件
+        function MyComponent() {
+            console.log(this);//babel翻译了之后，启动了严格模式，禁止了自定义函数中的this指向window,所以这里是undefined
+            return <h2>我是用函数定义的组件（适用于【简单组件】的定义）</h2>
+        }
+        //2.渲染组件到页面
+       ReactDOM.render(<MyComponent/>,document.getElementById("test"));
+        /*注意：
+        1.函数式组件开头要大写
+        2.渲染时要用标签的形式
+        */
+       /*
+       ReactDOM.render之后执行过程：
+       1.React解析目标标签，找到了MyComponent组件
+       2.发现目标组件是使用函数定义的，随后调用函数，将返回的虚拟DOM转换为真实DOM,随后呈现在页面中
+       */
+      
+       //useState钩子 使得函数组件也有自己的状态 返回的是数组
+       function Demo() {
+           //只要状态发生变化，Demo就重新调用，但是useState()不会覆盖原来的值
+           const [count,setCount] = React.useState(0);
+           const [name,setName] = React.useState('jerry');
+           function add(){
+            setCount(count+1)
+           }
+           function changeName(){
+            setName('tom')
+           }
+           function unmount(){
+              ReactDOM.unmountComponentAtNode(document.getElementById("test1")); 
+           }
+           /*
+           useEffect()这个钩子可以相当于类式组件的三个生命周期
+           分别是componentDidMount,componentDidUpdate,componentWillUnmount
+           1.至于是哪一个componentDidMount,componentDidUpdate
+           取决于useEffect的第二个参数，默认不传参数是监听所有组件的变化，也就是componentDidUpdate
+                           如果传的是一个空数组那么就是谁也不见监听，相当于componentDidMount
+            2.componentWillUnmount 就相当于第一个参数里返回的那个函数 
+           */
+           //开启一个定时器，在类式组件中相当于在componentDidMount中开启
+           React.useEffect(() => {
+               let timer = setInterval(() => {
+                   setCount(count => count+1)
+               },1000);
+               return () => {
+                   clearInterval(timer);
+               }
+           }, [])
+           return (
+               <div>
+                <h2>当前求和为 {count}</h2>
+                <button onClick={add}>点我+1</button>
+                <h2>名字：{name}</h2>
+                <button onClick={changeName}>点我改名</button>
+                <button onClick={unmount}>卸载组件</button>
+               </div>
+           )
+       }
+       ReactDOM.render(<Demo/>,document.getElementById("test1"));
+    </script>
+</body>
+</html>

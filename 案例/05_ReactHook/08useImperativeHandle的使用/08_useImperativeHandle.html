@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../../img/auto.svg">
+    <title>函数式组件</title>
+</head>
+<body>
+    <div id="test">
+    </div>
+    <!--引入react核心库-->
+    <script type="text/javascript" src="../../js/react.development.js"></script>
+    <!--引入react-dom 用于支持react操作dom-->
+    <script type="text/javascript" src="../../js/react-dom.development.js"></script>
+    <!--引入babel 用于将jsx转换为js-->
+    <script type="text/javascript" src="../../js/babel.min.js"></script>
+    <script type="text/babel">
+      // forwardRef的回顾 允许父组件传递ref给子组件
+      // 下面的这种做法相当于把input完全暴露给父组件 父组件可以对它做任何的事情
+      // const JPInput = React.forwardRef((props,ref) => {
+      //   return <input ref={ref} type="text"/>
+      // })
+
+      // useimperative的引出
+      // 上面的做法父组件的权限过大
+      // 有时候我们害怕父组件对子组件进行一个错误的操作，因此我们指定父组件只能修改子组件的某个属性
+      /*
+      useImperativeHandle(ref, createHandle, [deps])
+      ref：定义 current 对象的 ref 
+
+      createHandle：一个函数，返回值是一个对象，即这个 ref 的 current
+
+      对象 [deps]：即依赖列表，当监听的依赖发生变化，useImperativeHandle 才会重新将子组件的实例属性输出到父组件
+                  ref 的 current 属性上，如果为空数组，则不会重新输出。
+      */
+      const JPInput = React.forwardRef((props,ref) => {
+        const inputRef = React.useRef();
+        //下面的写法将回调函数的返回值绑定给ref ref.current只有focus这个属性
+        React.useImperativeHandle(ref,() => ({
+           focus:() => {
+            inputRef.current.focus();
+           },
+           value: inputRef.current.value
+          }),
+          [inputRef.current],
+        );
+        
+        return <input ref={inputRef} type="text"/>
+      })
+      // 1.创建函数式组件
+      function Demo() {
+        const inputRef = React.useRef();
+        return (
+          <div>
+            <JPInput ref={inputRef}/>
+            <button onClick={() => {inputRef.current.focus();console.log(inputRef.current)}}>聚焦</button>
+          </div>
+        )
+      } 
+      ReactDOM.render(<Demo/>,document.getElementById("test"));
+    </script>
+</body>
+</html>
+
+

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../../img/auto.svg">
+    <title>函数式组件</title>
+</head>
+<body>
+    <div id="test">
+    </div>
+    <!--引入react核心库-->
+    <script type="text/javascript" src="../../js/react.development.js"></script>
+    <!--引入react-dom 用于支持react操作dom-->
+    <script type="text/javascript" src="../../js/react-dom.development.js"></script>
+    <!--引入babel 用于将jsx转换为js-->
+    <script type="text/javascript" src="../../js/babel.min.js"></script>
+    <script type="text/babel">
+
+      //  reducer函数 参数1：初始值 参数2：action对象{type，data}
+      function countReducer(state,action){
+        const num = parseInt(action.data)
+        switch(action.type){
+          case "increment":
+            return {...state,count:state.count + num}
+          case "decrement":
+            return {...state,count:state.count - num}
+        }
+      }    
+
+      // 创建函数式组件
+      function Demo() {
+          const inputRef = React.useRef();
+          // useReducer是useState一种替代品，不能共享数据，不能取代redux
+          // 在某些场景下，如果state的处理逻辑比较复杂，我们可以通过useReducer来对其进行拆分；
+          /**
+           * 1.参数：reducer纯函数 初始值
+           * 2.返回值：数组 包含 状态+dispatch
+          */
+
+          const [count,dispatch] = React.useReducer(countReducer,{count:100})
+          return (
+              <div>
+                <h2>当前count值为{count.count}</h2>
+                <input type="number" ref={inputRef}/>&nbsp;
+                <button onClick={() => dispatch({type:'increment',data:inputRef.current.value})}>求和</button>
+                <button onClick={() => dispatch({type:'decrement',data:inputRef.current.value})}>求减</button>
+              </div>
+          )
+      }
+       ReactDOM.render(<Demo/>,document.getElementById("test"));
+    </script>
+</body>
+</html>

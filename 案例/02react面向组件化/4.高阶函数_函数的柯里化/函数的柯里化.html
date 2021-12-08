@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../../../img/auto.svg">
+    <title>函数的柯里化</title>
+</head>
+<body>
+    <div id="test">
+    </div>
+    <!--引入react核心库-->
+    <script type="text/javascript" src="../../../js/react.development.js"></script>
+    <!--引入react-dom 用于支持react操作dom-->
+    <script type="text/javascript" src="../../../js/react-dom.development.js"></script>
+     <!--引入babel 用于将jsx转换为js-->
+    <script type="text/javascript" src="../../../js/babel.min.js"></script>
+   
+    <script type="text/babel">
+    //#region
+    /*
+    高阶函数：如果一个函数符合下面2个规范中的一个，那该函数就是高阶函数
+            1.若A函数，接收的参数是一个函数，那么A就是一个高阶函数。
+            2.若A函数，返回值依然是一个函数，那么A就是一个高阶函数。
+            常见的高阶函数有：Promise,setTimeout,arr.map()等等
+    函数的柯里化：通过函数调用的形式，继续返回一个函数，实现多次接收参数最后统一处理的函数编码形式。
+    sum(a){
+        return (b)=>{
+            return (c) => {
+                return a+b+c
+            }
+        }
+    }
+    */
+   //#endregion
+        class Login extends React.Component{
+            state = {
+                username:'',
+                password:''
+            }
+            handleLogin = (event) => {
+                //阻止默认行为 防止页面跳转
+                event.preventDefault(); 
+                const {username,password} = this.state;
+                if(username==='hjp' && password==='666'){
+                    alert('登录成功！');
+                }else{
+                    alert('登录失败！');
+                }
+            }
+            setFormData = (dataType) => {
+                return (event) => {
+                    this.setState({[dataType]:event.target.value});
+                }
+            }
+            render(){
+                return (
+                    <form action="http://www.baidu.com" onSubmit={this.handleLogin}>
+                        <input onChange={this.setFormData('username')} type="text" name="username" placeholder="请输入用户名"/><br/>
+                        <input onChange={this.setFormData('password')} type="text" name="password" placeholder="请输入密码"/><br/>
+                        <input type="submit" value="登录"/>
+                    </form>
+
+                )
+            }
+        }
+        ReactDOM.render(<Login/>,document.getElementById("test"));
+    </script>
+</body>
+</html>

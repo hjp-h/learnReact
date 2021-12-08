@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../../../img/auto.svg">
+    <title>函数式组件</title>
+</head>
+<body>
+    <div id="test">
+    </div>
+    <!--引入react核心库-->
+    <script type="text/javascript" src="../../../js/react.development.js"></script>
+    <!--引入react-dom 用于支持react操作dom-->
+    <script type="text/javascript" src="../../../js/react-dom.development.js"></script>
+    <!--引入babel 用于将jsx转换为js-->
+    <script type="text/javascript" src="../../../js/babel.min.js"></script>
+    <script type="text/babel">
+      // 自定义Hook其实就是将常用的Hook的公共逻辑抽取出来 类似于封装函数
+      // 自定义Hook所在的函数名要以use开头
+
+      function Demo() {
+        useLoggingLife('Demo')
+          return (
+              <div>
+                <h3>我是Demo</h3>
+                <Home/>
+              </div>
+          )
+      }
+      function Home() {
+        useLoggingLife('Home')
+          return (
+              <div>
+                <h3>我是Home</h3>
+              </div>
+          )
+      }
+      function App() {
+          useLoggingLife('App')
+          const [isShow,setIsShow] = React.useState(true)
+          return (
+              <div>
+                {isShow && <Demo/>}
+                <button onClick={() => {setIsShow(!isShow)}}>切换</button>
+              </div>
+          )
+      }
+     
+      function useLoggingLife(name) {
+        React.useEffect(() => {
+            console.log(`${name}Demo被创建了`)
+            return () => {
+              // componentWillUnmount
+              console.log(`${name}Demo被销毁了`)
+            };
+          }, [])
+      }
+       ReactDOM.render(<App/>,document.getElementById("test"));
+       
+    </script>
+</body>
+</html>

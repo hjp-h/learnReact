@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>getSnapshotBeforeUpdate应用场景</title>
+    <style>
+        .list{
+            height:150px;
+            width:250px;
+            overflow: auto;
+        }
+        .list-item{
+            height:30px;
+            background-color:skyblue;
+        }
+    </style>
+</head>
+<body>
+    <div id="test">
+    </div>
+    <!--引入react核心库-->
+    <script type="text/javascript" src="../../../js/17.0.1/react.development.js"></script>
+    <!--引入react-dom 用于支持react操作dom-->
+    <script type="text/javascript" src="../../../js/17.0.1/react-dom.development.js"></script>
+    <!--引入babel 用于将jsx转换为js-->
+    <script type="text/javascript" src="../../../js/17.0.1/babel.min.js"></script>
+    <script type="text/babel">
+    /*案例需求：
+    （1）每隔一秒钟，增加一条新闻
+    （2）我滚到哪，就停住，让我看新闻
+    */
+        //1.创建组件
+        class Demo extends React.Component{
+            state = {newsArr:[]}
+            render(){
+                return(
+                    <div className="list" ref={c => this.list = c}>
+                        {
+                            this.state.newsArr.map((item,index) => {
+                                return <div key={index} className="list-item">{item}</div>
+                            })
+                        }
+                    </div>
+                )
+            }
+            //页面挂载完成，开启定时器 更新新闻
+            componentDidMount(){
+                setInterval(()=>{
+                    let newsArr = this.state.newsArr;
+                    let news = '新闻'+(newsArr.length+1);
+                    this.setState({newsArr:[news,...newsArr]});
+                },1000);
+            }
+            //获取要更新之前的页面滚动区域
+            getSnapshotBeforeUpdate(){
+                return this.list.scrollHeight;
+            }
+            componentDidUpdate(preProps,preState,snapshot){
+                //防止被挤下来
+                this.list.scrollTop += this.list.scrollHeight-snapshot;
+            }
+        }
+        //2.渲染组件到页面
+        ReactDOM.render(<Demo/>,document.getElementById("test"));
+    </script>
+</body>
+</html>

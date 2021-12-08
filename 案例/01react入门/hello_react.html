@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello React</title>
+</head>
+<body>
+    <!--准备好一个容器-->
+    <div id="test">
+
+    </div>
+    <!--引入react核心库-->
+    <script type="text/javascript" src="../../js/react.development.js"></script>
+    <!--引入react-dom 用于支持react操作dom-->
+    <script type="text/javascript" src="../../js/react-dom.development.js"></script>
+    <!--引入babel 用于将jsx转换为js-->
+    <script type="text/javascript" src="../../js/babel.min.js"></script>
+    <!--此处一定要写text/babel 因为我们要在这里写jsx 而不是js 通过babel转换-->
+    <script type="text/babel">
+        //1使用jsx创建虚拟DOM
+        const vdom = (
+            <h1 id="test">
+                <span>Hello React</span>
+            </h1>
+        )  /*此处一定不要写引号 因为不是字符串*/
+        var dom = document.getElementById("test");
+        console.log('虚拟DOM',vdom);//object
+        console.log('真实DOM',dom);
+        // debugger之后把鼠标悬浮在上面会发现真实dom就会有很多的属性
+        debugger;
+        /*
+        关于虚拟DOM: 
+        (1)本质是Object类型的对象
+        (2)虚拟DOM属性少，比较‘轻’，真实DOM很‘重’，因为虚拟DOM是react内部用，不需要那么多的属性
+        (3)虚拟DOM最终会被React转换为真实DOM,呈现在页面上
+        */
+
+        //2.渲染虚拟DOM到页面
+        // ReactDOM.render(虚拟DOM,容器);
+        ReactDOM.render(vdom,document.getElementById('test'));
+    </script>
+    <!-- <script>、
+        // jsx 的本质 React.createElement()
+        //1使用js创建虚拟DOM
+        const vdom = React.createElement("h1",{id:'title'},React.createElement('span',{},'Hello React'));
+        //2.渲染虚拟DOM到页面
+        // ReactDOM.render(虚拟DOM,容器);
+        ReactDOM.render(vdom,document.getElementById('test'));
+        
+        /*
+        缺点：创建html标签非常麻烦 jsx简化了这个操作
+        注意：jsx转换为js就是这种写法
+        */
+    </script> -->
+</body>
+</html>

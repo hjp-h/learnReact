@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../../../img/auto.svg">
+    <title>函数式组件</title>
+</head>
+<body>
+    <div id="test">
+    </div>
+    <!--引入react核心库-->
+    <script type="text/javascript" src="../../../js/react.development.js"></script>
+    <!--引入react-dom 用于支持react操作dom-->
+    <script type="text/javascript" src="../../../js/react-dom.development.js"></script>
+    <!--引入babel 用于将jsx转换为js-->
+    <script type="text/javascript" src="../../../js/babel.min.js"></script>
+    <script type="text/babel">
+      function useCustomHookGetLocalStorage() {
+        localStorage.clear();
+        const [userInfo,setUserInfo] = React.useState(() => {
+          let userInfo = JSON.parse(localStorage.getItem("user"))
+          if(!userInfo) {
+            userInfo = {name:'lqh',age:18};
+          }
+          return userInfo;
+        });
+         React.useEffect(() => {
+            localStorage.setItem("user",JSON.stringify(userInfo))
+         },[userInfo])
+         return [userInfo,setUserInfo]
+      }
+      function Demo() {
+          const [userInfo,setUserInfo] = useCustomHookGetLocalStorage()
+          return (
+              <div>
+                <h2>用户信息:{userInfo && userInfo.name}--{userInfo && userInfo.age} </h2>
+                <button onClick={() => {setUserInfo({name:'hjp',age:18})}}>设置用户信息</button>
+              </div>
+          )
+      }
+     ReactDOM.render(<Demo/>,document.getElementById("test"));
+    </script>
+</body>
+</html>
