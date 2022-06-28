@@ -40,7 +40,7 @@ export default class Messages extends Component {
           }
         </ul>
         <hr />
-        {/* 注册路由 1.paams方式路由传参接收*/}
+        {/* 注册路由 1.params方式路由传参接收*/}
         <Route
           path="/home/messages/detail/:id/:title"
           component={Detail}

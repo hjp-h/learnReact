@@ -1,59 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>组件三大属性之state</title>
 </head>
+
 <body>
     <div id="test">
     </div>
-   <!--引入react核心库-->
-   <script type="text/javascript" src="../../../js/react.development.js"></script>
-   <!--引入react-dom 用于支持react操作dom-->
-   <script type="text/javascript" src="../../../js/react-dom.development.js"></script>
+    <!--引入react核心库-->
+    <script type="text/javascript" src="../../../js/react.development.js"></script>
+    <!--引入react-dom 用于支持react操作dom-->
+    <script type="text/javascript" src="../../../js/react-dom.development.js"></script>
     <!--引入babel 用于将jsx转换为js-->
-   <script type="text/javascript" src="../../../js/babel.min.js"></script>
+    <script type="text/javascript" src="../../../js/babel.min.js"></script>
     <script type="text/babel">
-       //1.创建类式组件
-       class Weather extends React.Component{
-           //构造器调用几次？   ---1次
-           //通过构造器初始化state状态
-            constructor(props){
+        //1.创建类式组件
+        class Weather extends React.Component {
+            //构造器调用几次？   ---1次
+            //通过构造器初始化state状态
+            constructor(props) {
                 console.log('constrctor');
-                super(props);
+                super(props);//初始化父类 否则会报错 不满足继承 父类都没有 怎么有子类？
                 // 用到this之前一定要调用super
-                console.log("constructor this",this);//关于this的操作都要放在super()后面
+                console.log("constructor this", this);//关于this的操作都要放在super()后面
                 //原本state是null 继承而来
-                this.state = {isHot:false,wind:'微风'};
+                this.state = { isHot: false, wind: '微风' };
                 //把这个函数绑定给实例对象 解决titleClick中this的指向问题
                 // this.titleClick = this.titleClick.bind(this);
-           }
-           render(){ //render调用几次？  ---状态更新几次就调用几次
-               //对象的解构
-               console.log('render');
-               const {isHot,wind} = this.state;
-               console.log('render this',this);
-               /*注意:
-               （1）c要大写 titleClick没有括号 React内部帮你调用
-               （2）onClick={this.titleClick} 这样只是赋值了函数的引用  调用时相当于直接调用
-               （3）类中的方法局部开启了严格模式，所以this无法指向window,就是undefined
-               */
-               return <h1 onClick={this.titleClick}>今天天气很{isHot ?'炎热':'凉爽'},{wind}</h1>
+            }
+            render() { //render调用几次？  ---状态更新几次就调用几次
+                //对象的解构
+                console.log('render');
+                const { isHot, wind } = this.state;
+                console.log('render this', this);
+                /*注意:
+                （1）c要大写 titleClick没有括号 React内部帮你调用
+                （2）onClick={this.titleClick} 这样只是赋值了函数的引用  调用时相当于直接调用
+                （3）类中的方法局部开启了严格模式，所以this无法指向window,就是undefined 没有绑定this
+                */
+                return <h1 onClick={this.titleClick}>今天天气很{isHot ? '炎热' : '凉爽'},{wind}</h1>
             }
             //titleClick调用几次？ --点几次调用几次
-            titleClick(state){
-                console.log('titleClick',this);    
+            titleClick(state) {
+                console.log('titleClick', this);
                 //注意：状态（state）不能直接更改，下面是错误的写法
                 //this.state.isHot = !this.state.isHot;
 
                 //注意：状态的修改必须通过this.setState({})来修改,这是一种合并，把不同的换掉
-                this.setState({isHot:!this.state.isHot});
+                this.setState({ isHot: !this.state.isHot });
             }
-       }
-       //2.渲染组件到页面
-       ReactDOM.render(<Weather/>,document.getElementById("test"));
+        }
+        //2.渲染组件到页面
+        ReactDOM.render(<Weather />, document.getElementById("test"));
     </script>
 </body>
+
 </html>

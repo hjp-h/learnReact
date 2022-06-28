@@ -1,41 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JSX</title>
     <style>
-        .title{
-            background-color:orange;
-            width:200px;
+        .title {
+            background-color: orange;
+            width: 200px;
         }
     </style>
 </head>
+
 <body>
     <div id="test"></div>
-     <!--引入react核心库-->
-     <script type="text/javascript" src="../../js/react.development.js"></script>
-     <!--引入react-dom 用于支持react操作dom-->
-     <script type="text/javascript" src="../../js/react-dom.development.js"></script>
-     <!--引入babel 用于将jsx转换为js-->
-     <script type="text/javascript" src="../../js/babel.min.js"></script>
-     <!--此处一定要写babel 因为我们要在这里写jsx 而不是js 通过babel转换-->
-     <script type="text/babel">
+    <!--引入react核心库-->
+    <script type="text/javascript" src="../../js/react.development.js"></script>
+    <!--引入react-dom 用于支持react操作dom-->
+    <script type="text/javascript" src="../../js/react-dom.development.js"></script>
+    <!--引入babel 用于将jsx转换为js-->
+    <script type="text/javascript" src="../../js/babel.min.js"></script>
+    <!--此处一定要写babel 因为我们要在这里写jsx 而不是js 通过babel转换-->
+    <script type="text/babel">
         const id = 'title';
         const data = 'Hello React';
         //创建虚拟DOM
         const vdom = (
             <div>
-                <h2 id="{id}" className="title">
-                    <span style={{color:'white',fontSize:'25px'}}>{data}</span>
+                <h2 id="{id}" class="title">
+                    <span style={{ color: 'white', fontSize: '25px' }}>{data}</span>
                 </h2>
-                <input type="text" placeholder="你好"/>
+                <input type="text" placeholder="你好" />
             </div>
-            
+
         )
         //渲染
-        ReactDOM.render(vdom,document.getElementById("test"));
+        ReactDOM.render(vdom, document.getElementById("test"));
 
         /*
         JSX语法规则：
@@ -57,6 +59,7 @@
          a、a+b、demo(1)、arr.map()、function test(){}
         2.语句，没有返回值 
          */
-     </script>
+    </script>
 </body>
+
 </html>

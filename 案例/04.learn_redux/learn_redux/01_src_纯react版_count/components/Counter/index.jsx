@@ -31,7 +31,8 @@ export default class Counter extends Component {
       const {sum} = this.state;
       const {value} = this.selectNum;
       setTimeout(() => {
-        this.setState({sum:sum+value*1});
+        this.setState({ sum: sum + value * 1 });
+        console.log('state',this.state)
       },1000); 
   }
   render() {

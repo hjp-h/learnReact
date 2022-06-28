@@ -1,71 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="../../img/auto.svg">
-    <title>函数式组件</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="../../img/auto.svg">
+  <title>函数式组件</title>
 </head>
+
 <body>
-    <div id="test">
-    </div>
-    <!--引入react核心库-->
-    <script type="text/javascript" src="../../js/react.development.js"></script>
-    <!--引入react-dom 用于支持react操作dom-->
-    <script type="text/javascript" src="../../js/react-dom.development.js"></script>
-    <!--引入babel 用于将jsx转换为js-->
-    <script type="text/javascript" src="../../js/babel.min.js"></script>
-    <script type="text/babel">
-      // 以下使用useCallback没有进行一个性能优化 每次都会创建一个新函数 
-      // 判断依赖没有变化之后，只不过返回的都是之前的值
-      // 1.创建函数式组件
-      function Demo() {
-          console.log("Demo Render")
-          // 使用useStateHook
-          const numRef = React.useRef();
-          const textRef = React.useRef();
-          const [count,setCount] = React.useState(0);
-          const [name,setName] = React.useState('张三');
-          // useCallback主要是用来性能优化的
-          // 使用useCallback 使某一个函数不会被多次定义 只有他依赖的属性值变化时 他才会重新定义
-          // 参数有两个 1：回调函数 2.依赖数组
-          
-          // 不传参数的话 无效果
-          // const addCount = React.useCallback((num) => {
-          //   console.log('addCount执行了');
-          //   setCount(count + parseInt(num));
-          // });
+  <div id="test">
+  </div>
+  <!--引入react核心库-->
+  <script type="text/javascript" src="../../../js/react.development.js"></script>
+  <!--引入react-dom 用于支持react操作dom-->
+  <script type="text/javascript" src="../../../js/react-dom.development.js"></script>
+  <!--引入babel 用于将jsx转换为js-->
+  <script type="text/javascript" src="../../../js/babel.min.js"></script>
+  <script type="text/babel">
+    // 以下使用useCallback没有进行一个性能优化 每次都会创建一个新函数 
+    // 判断依赖没有变化之后，只不过返回的都是之前的值
+    // 1.创建函数式组件
+    function Demo() {
+      console.log("Demo Render")
+      // 使用useStateHook
+      const numRef = React.useRef();
+      const textRef = React.useRef();
+      const [count, setCount] = React.useState(0);
+      const [name, setName] = React.useState('张三');
+      // useCallback主要是用来性能优化的
+      // 使用useCallback 使某一个函数不会被多次定义 只有他依赖的属性值变化时 他才会重新定义
+      // 参数有两个 1：回调函数 2.依赖数组
 
-          // 空数组谁也不依赖 只会定义一次函数 也就是使用的函数地址不变
-          // const addCount = React.useCallback((num) => {
-          //   console.log('addCount执行了');
-          //   setCount(count + parseInt(num));
-          //   // 无论执行多少次 count结果都不会累加
-          //   // 因为这是个闭包 addcount只定义了一次 引用的count都是最初的那个初始值0
-          // },[]);
+      // 不传参数的话 无效果
+      // const addCount = React.useCallback((num) => {
+      //   console.log('addCount执行了');
+      //   setCount(count + parseInt(num));
+      // });
 
-          // 传入依赖值 只有count值改变了 才会重新定义这个函数
-          const addCount = React.useCallback((num) => {
-            console.log('addCount执行了');
-            console.log(num);
-            setCount(count + parseInt(num));
-          },[count]);
+      // 空数组谁也不依赖 只会定义一次函数 也就是使用的函数地址不变
+      // const addCount = React.useCallback((num) => {
+      //   console.log('count', count);
+      //   setCount(count + parseInt(num));
+      //   // 无论执行多少次 count结果都不会累加
+      //   // 因为这是个闭包 addcount只定义了一次 引用的count都是最初的那个初始值0
+      // }, []);
 
-          const changeName = React.useCallback((name) => {
-             setName(name);
-          },[name])
-          return (
-              <div>
-                <h2>当前count值为{count}，名字：{name}</h2>
-                <input type="number" ref={numRef} placeholder="请输入数字"/><br/>
-                <input type="text" ref={textRef} placeholder="请输入名字"/><br/>
-                <button onClick={() => addCount(numRef.current.value)}>求和</button>
-                <button onClick={() => changeName(textRef.current.value)}>换名</button>
-              </div>
-          )
-      }
-       ReactDOM.render(<Demo/>,document.getElementById("test"));
-    </script>
+      // 传入依赖值 只有count值改变了 才会重新定义这个函数
+      const addCount = React.useCallback((num) => {
+        console.log('addCount执行了');
+        console.log(num);
+        setCount(count + parseInt(num));
+      }, [count]);
+
+      const changeName = React.useCallback((name) => {
+        setName(name);
+      }, [name])
+      return (
+        <div>
+          <h2>当前count值为{count}，名字：{name}</h2>
+          <input type="number" ref={numRef} placeholder="请输入数字" /><br />
+          <input type="text" ref={textRef} placeholder="请输入名字" /><br />
+          <button onClick={() => addCount(numRef.current.value)}>求和</button>
+          <button onClick={() => changeName(textRef.current.value)}>换名</button>
+        </div>
+      )
+    }
+    ReactDOM.render(<Demo />, document.getElementById("test"));
+  </script>
 </body>
+
 </html>

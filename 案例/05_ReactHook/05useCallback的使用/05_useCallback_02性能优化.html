@@ -1,68 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="../../img/auto.svg">
-    <title>函数式组件</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="../../img/auto.svg">
+  <title>函数式组件</title>
 </head>
+
 <body>
-    <div id="test">
-    </div>
-    <!--引入react核心库-->
-    <script type="text/javascript" src="../../js/react.development.js"></script>
-    <!--引入react-dom 用于支持react操作dom-->
-    <script type="text/javascript" src="../../js/react-dom.development.js"></script>
-    <!--引入babel 用于将jsx转换为js-->
-    <script type="text/javascript" src="../../js/babel.min.js"></script>
-    <script type="text/babel">
-      // useCallback性能优化的使用场景：
-      /* 当父组件的函数需要作为props传递给子组件使用的时候，防止父组件的
-         render时使该函数重新定义，导致子组件接收的props改变而重新render
-         
-         1.第一个参数是一个函数 2.第二个参数是一个依赖数组
-      */
+  <div id="test">
+  </div>
+  <!--引入react核心库-->
+  <script type="text/javascript" src="../../../js/react.development.js"></script>
+  <!--引入react-dom 用于支持react操作dom-->
+  <script type="text/javascript" src="../../../js/react-dom.development.js"></script>
+  <!--引入babel 用于将jsx转换为js-->
+  <script type="text/javascript" src="../../../js/babel.min.js"></script>
+  <script type="text/babel">
+    // useCallback性能优化的使用场景：
+    /* 当父组件的函数需要作为props传递给子组件使用的时候，防止父组件的
+       render时使该函数重新定义，导致子组件接收的props改变而重新render
+       
+       1.第一个参数是一个函数 2.第二个参数是一个依赖数组
+    */
 
-      // 自定义一个button组件 使用memo相当于类组件的pureCompoent
-      // 防止父组件的无关渲染使子组件重新渲染
-      const JPButton = React.memo((props) => {
-        console.log('JPButton render')
-        return <button onClick={props.addCount}>JPButton 求和+1</button>
-      })
-      // 1.创建函数式组件
-      function Demo() {
-          console.log("Demo Render")
-          // 使用useStateHook
-          const numRef = React.useRef();
-          const textRef = React.useRef();
-          const [count,setCount] = React.useState(0);
-          const [name,setName] = React.useState('张三');
+    // 自定义一个button组件 使用memo相当于类组件的pureCompoent
+    // 防止父组件的无关渲染使子组件重新渲染
+    const JPButton = React.memo((props) => {
+      console.log('JPButton render')
+      return <button onClick={props.addCount}>JPButton 求和+1</button>
+    })
+    // 1.创建函数式组件
+    function Demo() {
+      console.log("Demo Render")
+      // 使用useStateHook
+      const numRef = React.useRef();
+      const textRef = React.useRef();
+      const [count, setCount] = React.useState(0);
+      const [name, setName] = React.useState('张三');
 
-          // 传入依赖值 只有count值改变了 才会重新定义这个函数
-          const addCount = React.useCallback(() => {
-            setCount(count + 1);
-          },[count]);
+      // 传入依赖值 只有count值改变了 才会重新定义这个函数
+      const addCount = React.useCallback(() => {
+        setCount(count + 1);
+      }, [count]);
 
-          const addCount1 = () => {
-            setCount(count + 1);
-          }
-          const changeName = (name) => {
-             setName(name);
-          }
-          return (
-              <div>
-                <h2>当前count值为{count}，名字：{name}</h2>
-                <input type="text" ref={textRef} placeholder="请输入名字"/><br/>
-                <button onClick={addCount1}>+1</button>
-                {/*当点击换名后 addCount不会使子组件重新渲染 addcount1会*/}
-                <JPButton addCount={addCount}/>
-                <JPButton addCount={addCount1}/>
-                <button onClick={() => changeName(textRef.current.value)}>换名</button>
-              </div>
-          )
+      const addCount1 = () => {
+        setCount(count + 1);
       }
-       ReactDOM.render(<Demo/>,document.getElementById("test"));
-    </script>
+      const changeName = (name) => {
+        setName(name);
+      }
+      return (
+        <div>
+          <h2>当前count值为{count}，名字：{name}</h2>
+          <input type="text" ref={textRef} placeholder="请输入名字" /><br />
+          <button onClick={addCount1}>+1</button>
+          {/*当点击换名后 addCount不会使子组件重新渲染 addcount1会*/}
+          <JPButton addCount={addCount} />
+          <JPButton addCount={addCount1} />
+          <button onClick={() => changeName(textRef.current.value)}>换名</button>
+        </div>
+      )
+    }
+    ReactDOM.render(<Demo />, document.getElementById("test"));
+  </script>
 </body>
+
 </html>

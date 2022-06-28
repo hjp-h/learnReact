@@ -1,51 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="../../img/auto.svg">
-    <title>函数式组件</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="../../img/auto.svg">
+  <title>函数式组件</title>
 </head>
+
 <body>
-    <div id="test">
-    </div>
-    <!--引入react核心库-->
-    <script type="text/javascript" src="../../js/react.development.js"></script>
-    <!--引入react-dom 用于支持react操作dom-->
-    <script type="text/javascript" src="../../js/react-dom.development.js"></script>
-    <!--引入babel 用于将jsx转换为js-->
-    <script type="text/javascript" src="../../js/babel.min.js"></script>
-    <script type="text/babel">
+  <div id="test">
+  </div>
+  <!--引入react核心库-->
+  <script type="text/javascript" src="../../js/react.development.js"></script>
+  <!--引入react-dom 用于支持react操作dom-->
+  <script type="text/javascript" src="../../js/react-dom.development.js"></script>
+  <!--引入babel 用于将jsx转换为js-->
+  <script type="text/javascript" src="../../js/babel.min.js"></script>
+  <script type="text/babel">
     // hook就是一个钩子 钩如state和一些生命周期
     // 要在函数组件的最顶层使用hook 不建议在别的函数内和循环、判断调用hook 
-      // 1.创建函数式组件
-      function Demo() {
-        console.log("Demo Render")
-        const [count,setCount] = React.useState(0);
-        const numRef = React.useRef(count);
-        const inputRef = React.useRef(0);
-        function handleClick() {
-          inputRef.current.focus();
-          console.log(inputRef.current.value);
-          setCount(count + 10);
-        }
-        React.useEffect(() => {
-          // 这里是相当于componentDidMount,componentDidUpdate
-          numRef.current = count;
-        },[count]);
-        return (
-          <div>
-            <h2>上一个count的值：{numRef.current}</h2>
-            <h2>当前count值为{count}</h2>
-            <input type="text" ref={inputRef} onBlur={() => console.log(inputRef.current.value)}/>
-            <button onClick={() => handleClick()}>点我一下</button>
-          </div>
-        )
-      } 
-      ReactDOM.render(<Demo/>,document.getElementById("test"));
-    </script>
+
+    // 注意：不能将ref绑定给函数式组件，需要使用forwardRef
+    // 1.创建函数式组件
+    function Demo() {
+      console.log("Demo Render")
+      const [count, setCount] = React.useState(0);
+
+      // 可以给useRef传入一个值 这个值在整个声明周期中是不变的
+      // 应用场景：显示某一个属性上一次的值
+      const numRef = React.useRef(count);
+
+      const inputRef = React.useRef(0);
+      function handleClick() {
+        inputRef.current.focus();
+        console.log(inputRef.current.value);
+        setCount(count + 10);
+      }
+      React.useEffect(() => {
+        // 这里是相当于componentDidMount,componentDidUpdate
+        // counter更新后赋值给numRef.current  但是numRef.current值更新不会引起页面重新渲染（显示上一次的值）
+        // 只有在counter下一次更新后 页面才重新熏染numRef.current
+        numRef.current = count;
+      }, [count]);
+      return (
+        <div>
+          <h2>上一个count的值：{numRef.current}</h2>
+          <h2>当前count值为{count}</h2>
+          <input type="text" ref={inputRef} onBlur={() => console.log(inputRef.current.value)} />
+          <button onClick={() => handleClick()}>点我一下</button>
+        </div>
+      )
+    }
+    ReactDOM.render(<Demo />, document.getElementById("test"));
+  </script>
 </body>
+
 </html>
-
-
