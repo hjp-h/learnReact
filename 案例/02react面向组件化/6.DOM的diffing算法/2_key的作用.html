@@ -92,27 +92,45 @@
 
 		state = {
 			persons:[
-				{id:1,name:'小张',age:18},
-				{id:2,name:'小李',age:19},
+				{id:1,name:'小张',age:18,hobby:''},
+				{id:2,name:'小李',age:19,hobby:'',},
 			]
 		}
 
 		add = ()=>{
 			const {persons} = this.state
-			const p = {id:persons.length+1,name:'小王',age:20}
+			const p = {id:persons.length+1,name:'小王',age:20,hobby:''}
 			this.setState({persons:[p,...persons]})
+		}
+
+		handleHobbyChange = (hobby,index) => {
+			const persons = this.state.persons;
+			persons[index].hobby = hobby;
+			this.setState({persons:[...persons]})
 		}
 
 		render(){
 			return (
 				<div>
+					<h2>展示人员信息(表单项不绑定value 有问题)</h2>
+					<button onClick={this.add}>添加一个小王</button>
+					<h3>使用index（索引值）作为key</h3>
+					<ul>
+						{
+							this.state.persons.map((personObj,index)=>{
+								return <li key={index}>{personObj.name}---{personObj.age}--爱好：<input type="text"/></li>
+							})
+						}
+					</ul>
+					<hr/>
+					<hr/>
 					<h2>展示人员信息</h2>
 					<button onClick={this.add}>添加一个小王</button>
 					<h3>使用index（索引值）作为key</h3>
 					<ul>
 						{
 							this.state.persons.map((personObj,index)=>{
-								return <li key={index}>{personObj.name}---{personObj.age}<input type="text"/></li>
+								return <li key={index}>{personObj.name}---{personObj.age}--爱好：<input type="text" value={personObj.hobby} onChange={(e) => this.handleHobbyChange(e.target.value,index)}/></li>
 							})
 						}
 					</ul>
@@ -121,8 +139,8 @@
 					<h3>使用id（数据的唯一标识）作为key</h3>
 					<ul>
 						{
-							this.state.persons.map((personObj)=>{
-								return <li key={personObj.id}>{personObj.name}---{personObj.age}<input type="text"/></li>
+							this.state.persons.map((personObj,index)=>{
+								return <li key={personObj.id}>{personObj.name}---{personObj.age}----爱好：<input value={personObj.hobby} onChange={(e) => this.handleHobbyChange(e.target.value,index)} type="text"/></li>
 							})
 						}
 					</ul>
