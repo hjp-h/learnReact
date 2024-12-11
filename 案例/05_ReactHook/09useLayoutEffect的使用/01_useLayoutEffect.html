@@ -19,34 +19,38 @@
   <!--引入babel 用于将jsx转换为js-->
   <script type="text/javascript" src="../../../js/babel.min.js"></script>
   <script type="text/babel">
-    // useLayoutEffect 就是在状态更新之前对状态进行一些操作，会阻塞dom更新
-    // useEffect 就是在更新状态之后对状态进行一些操作，不会阻塞dom更新
+    // useLayoutEffect 就是在状态更新到界面之前对状态进行一些操作，会阻塞dom更新
+    // useEffect 就是在更新状态到界面之后对状态进行一些操作，不会阻塞dom更新
     // 1.创建函数式组件
     function Demo() {
       console.log("Demo Render")
-      const [count, setCount] = React.useState(10);
+      const [count, setCount] = React.useState(5);
       React.useLayoutEffect(() => {
-        // 这里相当于componentDidMounted 和 componentWillUpdate的钩子
+        // 这里相当于componentDidMount 和 componentWillUpdate的钩子
         if (count === 0) {
           setCount(123)
         }
+        console.log("useLayoutEffect1")
+        console.log("count",count)
+        alert("useLayoutEffect1")
         return () => {
           // componentWillUnmount
-          // console.log('再见')
-          // function Goodbye() {
-          //   return (
-          //     <p>Bye~</p>
-          //   )
-          // }
+          console.log("useLayoutEffect2")
           // ReactDOM.render(<Goodbye />, document.getElementById("test"));
+          alert("useLayoutEffect2")
         };
       }, [count])
       return (
         <div>
           <h2>当前count值为{count}</h2>
-          <button onClick={() => setCount(0)}>修改count</button>
+          <button onClick={() => setCount(count-1)}>修改count</button>
           <button onClick={() => ReactDOM.unmountComponentAtNode(document.getElementById("test"))}>卸载组件</button>
         </div>
+      )
+    }
+    function Goodbye() {
+      return (
+        <p>Bye~</p>
       )
     }
     ReactDOM.render(<Demo />, document.getElementById("test"));

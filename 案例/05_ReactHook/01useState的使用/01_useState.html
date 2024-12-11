@@ -73,9 +73,17 @@
         newStudents[index].age += 1;
         setStudents(newStudents);
       }
+
+      const testClick = () => {
+        setTimeout(() => {
+          setCount(5);
+          setCount(6)
+        },10)
+      }
+      console.log("渲染了",count)
       return (
         <div>
-          <h2>当前count值为{count}</h2>
+          <h2 onClick={() => testClick()}>当前count值为{count}</h2>
           <input type="number" ref={inputRef} />&nbsp;
           <button onClick={() => addCount(inputRef.current.value)}>求和</button>
           <button onClick={() => subCount(inputRef.current.value)}>求减</button>
